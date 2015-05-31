@@ -87,7 +87,7 @@ static const CGFloat WPDefaultPadding = 10.0;
     self.titleLabel = [[UILabel alloc] initWithFrame:titleLableRect];
     self.titleLabel.backgroundColor = [UIColor clearColor];
     self.titleLabel.font = [UIFont systemFontOfSize:12.0];
-    self.titleLabel.text = @"awda dadwaa aw2q dawd adaw ada aada wfadw adawa wda da awd";
+    self.titleLabel.text = @"";
     self.titleLabel.textColor = [UIColor blackColor];
     self.titleLabel.textAlignment = NSTextAlignmentCenter;
     self.titleLabel.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
@@ -96,8 +96,6 @@ static const CGFloat WPDefaultPadding = 10.0;
     
     self.expandHeight = WPDefaultExpandedHeight;
     self.animationDuration = WPDefaultAnimationDuration;
-    
-    self.closeButton.hidden = YES;
     
     return self;
 }

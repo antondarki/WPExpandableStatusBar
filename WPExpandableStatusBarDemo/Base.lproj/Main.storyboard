@@ -58,8 +58,8 @@
                                 </connections>
                             </stepper>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1Cw-Ih-J7S">
-                                <rect key="frame" x="140" y="269" width="39" height="30"/>
-                                <state key="normal" title="Show">
+                                <rect key="frame" x="121.5" y="269" width="76" height="30"/>
+                                <state key="normal" title="Show/Hide">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>

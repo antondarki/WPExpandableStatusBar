@@ -31,6 +31,8 @@
     [super viewDidLoad];
     
     self.expandableStatusBar = [WPExpandableStatusBar sharedInstance];
+    self.expandableStatusBar.titleLabel.text = @"Lorem ipsum dolor sit amet, consectetur adipiscing elit";
+    self.expandableStatusBar.closeButton.hidden = NO;
     
     self.val1.text = @"";
     self.val2.text = @"";
@@ -45,13 +47,9 @@
     self.expandableStatusBar.animationDuration = duration;
     
     if (self.expandableStatusBar.expandable) {
-        [self.expandableStatusBar hideOverlayAnimated:YES completion:^{
-            [self.actionButton setTitle:@"Show" forState:UIControlStateNormal];
-        }];
+        [self.expandableStatusBar hideOverlayAnimated:YES completion:nil];
     } else {
-        [self.expandableStatusBar showOverlayAnimated:YES completion:^{
-            [self.actionButton setTitle:@"Hide" forState:UIControlStateNormal];
-        }];
+        [self.expandableStatusBar showOverlayAnimated:YES completion:nil];
     }
 }
 
