@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="13F1077" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vtb-U5-1ht">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+    </dependencies>
+    <scenes>
+        <!--Navigation Controller-->
+        <scene sceneID="dA8-Tj-KBW">
+            <objects>
+                <navigationController id="vtb-U5-1ht" sceneMemberID="viewController">
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="wiq-VK-iKx">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="RLS-Sc-m65" kind="relationship" relationship="rootViewController" id="fQr-XP-1ol"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="UbN-Oq-rCM" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-722" y="-113"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="mJO-du-esR">
+            <objects>
+                <viewController id="RLS-Sc-m65" customClass="WPViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="1dt-SY-pyK"/>
+                        <viewControllerLayoutGuide type="bottom" id="cSA-Tp-LMV"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="4ID-rz-uKo">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="100" stepValue="0.10000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="QNU-Yz-R6S">
+                                <rect key="frame" x="216" y="90" width="94" height="29"/>
+                                <connections>
+                                    <action selector="stepper1Tap:" destination="RLS-Sc-m65" eventType="valueChanged" id="jAn-vE-W3G"/>
+                                </connections>
+                            </stepper>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Animation duration:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6QL-FF-WZu">
+                                <rect key="frame" x="10" y="95" width="134" height="18"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Expand by value:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c4Z-0V-Uud">
+                                <rect key="frame" x="10" y="143" width="118" height="18"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="3E1-dn-lFq">
+                                <rect key="frame" x="216" y="138" width="94" height="29"/>
+                                <connections>
+                                    <action selector="stepper2Tap:" destination="RLS-Sc-m65" eventType="valueChanged" id="eGV-PB-nXm"/>
+                                </connections>
+                            </stepper>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1Cw-Ih-J7S">
+                                <rect key="frame" x="140" y="269" width="39" height="30"/>
+                                <state key="normal" title="Show">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="actionButtonTap:" destination="RLS-Sc-m65" eventType="touchUpInside" id="csp-Py-Zk6"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;val>" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ba3-fa-dQR">
+                                <rect key="frame" x="129" y="143" width="38" height="18"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt;val>" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xzf-0a-XX1">
+                                <rect key="frame" x="143" y="95" width="38" height="18"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="centerX" secondItem="1Cw-Ih-J7S" secondAttribute="centerX" id="2O9-uq-qMt"/>
+                            <constraint firstItem="c4Z-0V-Uud" firstAttribute="leading" secondItem="4ID-rz-uKo" secondAttribute="leading" constant="10" id="97z-iG-07v"/>
+                            <constraint firstItem="3E1-dn-lFq" firstAttribute="centerY" secondItem="c4Z-0V-Uud" secondAttribute="centerY" id="CYv-MK-Pkk"/>
+                            <constraint firstItem="6QL-FF-WZu" firstAttribute="leading" secondItem="4ID-rz-uKo" secondAttribute="leading" constant="10" id="EYG-Pc-jPG"/>
+                            <constraint firstItem="3E1-dn-lFq" firstAttribute="top" secondItem="QNU-Yz-R6S" secondAttribute="bottom" constant="19" id="Fr9-xu-Ds0"/>
+                            <constraint firstItem="Ba3-fa-dQR" firstAttribute="centerY" secondItem="c4Z-0V-Uud" secondAttribute="centerY" constant="0.5" id="IXb-Bp-lR5"/>
+                            <constraint firstAttribute="trailing" secondItem="3E1-dn-lFq" secondAttribute="trailing" constant="10" id="Jwx-JS-5GO"/>
+                            <constraint firstItem="xzf-0a-XX1" firstAttribute="leading" secondItem="6QL-FF-WZu" secondAttribute="trailing" constant="-1" id="NR7-rZ-fA6"/>
+                            <constraint firstItem="6QL-FF-WZu" firstAttribute="centerY" secondItem="QNU-Yz-R6S" secondAttribute="centerY" id="PgH-g2-YLP"/>
+                            <constraint firstAttribute="centerY" secondItem="1Cw-Ih-J7S" secondAttribute="centerY" id="ZzA-mx-O0k"/>
+                            <constraint firstItem="6QL-FF-WZu" firstAttribute="centerY" secondItem="xzf-0a-XX1" secondAttribute="centerY" constant="-0.5" id="iSa-s8-JGr"/>
+                            <constraint firstItem="QNU-Yz-R6S" firstAttribute="top" secondItem="1dt-SY-pyK" secondAttribute="bottom" constant="26" id="nwC-Ta-NsB"/>
+                            <constraint firstAttribute="trailing" secondItem="QNU-Yz-R6S" secondAttribute="trailing" constant="10" id="thV-yc-5Rn"/>
+                            <constraint firstItem="Ba3-fa-dQR" firstAttribute="leading" secondItem="c4Z-0V-Uud" secondAttribute="trailing" constant="1" id="zRH-NV-anE"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="sb5-8H-YvX"/>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+                    <connections>
+                        <outlet property="actionButton" destination="1Cw-Ih-J7S" id="ZbR-GS-mpb"/>
+                        <outlet property="stepper1" destination="QNU-Yz-R6S" id="64t-VG-TlQ"/>
+                        <outlet property="stepper2" destination="3E1-dn-lFq" id="pX9-8p-A0s"/>
+                        <outlet property="val1" destination="xzf-0a-XX1" id="vi5-ZP-283"/>
+                        <outlet property="val2" destination="Ba3-fa-dQR" id="9KN-Bl-WiQ"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="svk-RF-cmx" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-263" y="-113"/>
+        </scene>
+    </scenes>
+</document>
