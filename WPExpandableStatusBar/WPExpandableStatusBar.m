@@ -123,7 +123,22 @@ static const CGFloat WPDefaultPadding = 10.0;
     }
 }
 
-// TODO: iOS 7.0 modal presentation bug
+// workaround
+// or use custom modal transition style
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    if ([keyPath isEqualToString:NSStringFromSelector(@selector(frame))]) {
+        CGRect rect = [[change valueForKey:NSKeyValueChangeNewKey] CGRectValue];
+        if (rect.origin.y == -20.0) {
+            rect.origin.y = 0.0;
+            rect.size.height = CGRectGetHeight([UIApplication sharedApplication].delegate.window.frame);
+            
+            [UIApplication sharedApplication].delegate.window.rootViewController.view.frame = rect;
+            [[UIApplication sharedApplication].delegate.window.rootViewController.view layoutIfNeeded];
+        }
+    }
+}
 
 - (void)showOverlayAnimated:(BOOL)animated completion:(void (^)(void))completion
 {
@@ -146,6 +161,10 @@ static const CGFloat WPDefaultPadding = 10.0;
                                 WPStatusBarDelayUserInfoKey : @(0.0),
                                 WPStatusBarAnimatedUserInfoKey : @(animated) };
     
+    if (!IsIOS8OrMore()) {
+        [[UIApplication sharedApplication].delegate.window.rootViewController.view addObserver:self forKeyPath:NSStringFromSelector(@selector(frame)) options:NSKeyValueObservingOptionNew context:nil];
+    }
+
     [[NSNotificationCenter defaultCenter] postNotificationName:WPStatysBarWillShowNotification object:nil userInfo:userInfo];
     
     if (animated) {
@@ -210,6 +229,10 @@ static const CGFloat WPDefaultPadding = 10.0;
             
             [mainWindow layoutIfNeeded];
         } completion:^(BOOL finished) {
+            if (!IsIOS8OrMore()) {
+                [[UIApplication sharedApplication].delegate.window.rootViewController.view removeObserver:self forKeyPath:NSStringFromSelector(@selector(frame))];
+            }
+            
             [[NSNotificationCenter defaultCenter] postNotificationName:WPStatusBarDidHideNotification object:nil userInfo:userInfo];
             
             if (completion) {
@@ -223,6 +246,10 @@ static const CGFloat WPDefaultPadding = 10.0;
         mainWindow.frame = mainWindowFrame;
         mainWindow.rootViewController.view.frame = mainWindowFrame;
         [mainWindow layoutIfNeeded];
+        
+        if (!IsIOS8OrMore()) {
+            [[UIApplication sharedApplication].delegate.window.rootViewController.view removeObserver:self forKeyPath:NSStringFromSelector(@selector(frame))];
+        }
         
         [[NSNotificationCenter defaultCenter] postNotificationName:WPStatusBarDidHideNotification object:nil userInfo:userInfo];
         
@@ -279,6 +306,12 @@ static const CGFloat WPDefaultPadding = 10.0;
 BOOL CGFloatEqualToCGFloat(CGFloat a, CGFloat b)
 {
     return (fabs((a) - (b)) < FLT_EPSILON);
+}
+
+BOOL IsIOS8OrMore(void)
+{
+    CGFloat deviceVersion = [[UIDevice currentDevice].systemVersion floatValue];
+    return deviceVersion >= 8.0f;
 }
 
 @end
