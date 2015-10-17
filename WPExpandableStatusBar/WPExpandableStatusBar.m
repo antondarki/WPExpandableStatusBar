@@ -25,10 +25,10 @@ NSString * const WPStatusBarAnimatedUserInfoKey = @"WPStatusBarAnimatedUserInfoK
 
 static const CGFloat WPDefaultExpandedHeight = 20.0;
 static const CGFloat WPDefaultAnimationDuration = 0.5;
-static const CGFloat WPDefaultCloseButtonWidth = 40.0;
-static const CGFloat WPDefaultPadding = 10.0;
 
 @interface WPExpandableStatusBar()
+
+@property (nonatomic, strong, readwrite) UIView *contentView;
 
 @end
 
@@ -66,61 +66,10 @@ static const CGFloat WPDefaultPadding = 10.0;
     
     [self addSubview:self.contentView];
     
-    CGRect buttonRect = CGRectMake(CGRectGetWidth(self.contentView.frame) - WPDefaultPadding - WPDefaultCloseButtonWidth,
-                                   WPDefaultExpandedHeight,
-                                   WPDefaultCloseButtonWidth,
-                                   WPDefaultExpandedHeight);
-    self.closeButton = [[UIButton alloc] initWithFrame:buttonRect];
-    self.closeButton.titleLabel.textAlignment = NSTextAlignmentCenter;
-    self.closeButton.titleLabel.font = [UIFont systemFontOfSize:14.0];
-    [self.closeButton setTitle:@"Hide" forState:UIControlStateNormal];
-    [self.closeButton addTarget:self action:@selector(closeButtonTouchUpInside:) forControlEvents:UIControlEventTouchUpInside];
-    
-    [self.contentView addSubview:self.closeButton];
-    
-    CGFloat padding = CGRectGetWidth(self.frame) - CGRectGetMinX(self.closeButton.frame);
-    
-    CGRect titleLableRect = CGRectMake(padding,
-                                       WPDefaultExpandedHeight,
-                                       CGRectGetWidth(self.contentView.frame) - padding * 2,
-                                       WPDefaultExpandedHeight);
-    self.titleLabel = [[UILabel alloc] initWithFrame:titleLableRect];
-    self.titleLabel.backgroundColor = [UIColor clearColor];
-    self.titleLabel.font = [UIFont systemFontOfSize:12.0];
-    self.titleLabel.text = @"";
-    self.titleLabel.textColor = [UIColor blackColor];
-    self.titleLabel.textAlignment = NSTextAlignmentCenter;
-    self.titleLabel.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-    self.titleLabel.numberOfLines = 0;
-    [self.contentView addSubview:self.titleLabel];
-    
     self.expandHeight = WPDefaultExpandedHeight;
     self.animationDuration = WPDefaultAnimationDuration;
     
     return self;
-}
-
-- (void)layoutSubviews
-{
-    // TODO: Rotating support (to landscape orientation)
-    
-    if (self.expandable) {
-        // update close button frame
-        CGFloat buttonPositionX = CGRectGetWidth(self.contentView.frame) - WPDefaultPadding - CGRectGetWidth(self.closeButton.frame);
-        CGFloat buttonPositionY = CGRectGetHeight(self.contentView.frame) - CGRectGetHeight(self.closeButton.frame);
-        CGFloat buttonWidth = self.closeButton.hidden ? 0.0 : CGRectGetWidth(self.closeButton.frame);
-        CGFloat buttonHeight = CGRectGetHeight(self.closeButton.frame);
-        
-        self.closeButton.frame = CGRectMake(buttonPositionX, buttonPositionY, buttonWidth, buttonHeight);
-        
-        // calculate and update title label frame
-        CGFloat labelPositionX = self.closeButton.hidden ? WPDefaultPadding : CGRectGetWidth(self.frame) - CGRectGetMinX(self.closeButton.frame);
-        CGFloat labelPositionY = MAX(CGRectGetHeight([UIApplication sharedApplication].statusBarFrame), CGRectGetMinY(self.titleLabel.frame));
-        CGFloat labelWidth = CGRectGetWidth(self.contentView.frame) - labelPositionX * 2;
-        CGFloat labelHeight = MIN([self maximumTitleLabelHeight], CGRectGetHeight(self.titleLabel.frame));
-        
-        self.titleLabel.frame = CGRectMake(labelPositionX, labelPositionY, labelWidth, labelHeight);
-    }
 }
 
 // workaround
@@ -257,11 +206,6 @@ static const CGFloat WPDefaultPadding = 10.0;
             completion();
         }
     }
-}
-
-- (void)closeButtonTouchUpInside:(UIButton *)sender
-{
-    [self hideOverlayAnimated:YES completion:nil];
 }
 
 #pragma mark - Getters / Setters

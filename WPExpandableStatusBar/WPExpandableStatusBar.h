@@ -37,9 +37,7 @@ extern NSString * const WPStatusBarAnimatedUserInfoKey;
 
 @interface WPExpandableStatusBar : UIWindow
 
-@property (nonatomic, strong) UIView *contentView;
-@property (nonatomic, strong) UIButton *closeButton;
-@property (nonatomic, strong) UILabel *titleLabel;
+@property (nonatomic, strong, readonly) UIView *contentView;
 
 // Height of expanding of overlay view
 @property (nonatomic, assign) CGFloat expandHeight;

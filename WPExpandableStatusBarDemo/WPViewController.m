@@ -31,8 +31,6 @@
     [super viewDidLoad];
     
     self.expandableStatusBar = [WPExpandableStatusBar sharedInstance];
-    self.expandableStatusBar.titleLabel.text = @"Lorem ipsum dolor sit amet, consectetur adipiscing elit";
-    self.expandableStatusBar.closeButton.hidden = NO;
     
     self.val1.text = @"";
     self.val2.text = @"";
