@@ -44,7 +44,7 @@
     self.expandableStatusBar.expandHeight = expandValue;
     self.expandableStatusBar.animationDuration = duration;
     
-    if (self.expandableStatusBar.expandable) {
+    if (self.expandableStatusBar.expanded) {
         [self.expandableStatusBar hideOverlayAnimated:YES completion:nil];
     } else {
         [self.expandableStatusBar showOverlayAnimated:YES completion:nil];

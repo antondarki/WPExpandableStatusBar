@@ -26,6 +26,7 @@ NSString * const WPStatusBarAnimatedUserInfoKey = @"WPStatusBarAnimatedUserInfoK
 static const CGFloat WPDefaultExpandedHeight = 20.0;
 static const CGFloat WPDefaultAnimationDuration = 0.5;
 
+
 @interface WPExpandableStatusBar()
 
 @property (nonatomic, strong, readwrite) UIView *contentView;
@@ -45,29 +46,57 @@ static const CGFloat WPDefaultAnimationDuration = 0.5;
     return _instance;
 }
 
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
+{
+    if (!self.userInteractionEnabled || self.hidden || CGFloatEqualToCGFloat(self.alpha, 0.0)) {
+        return nil;
+    }
+    
+    if (!self.expanded) {
+        return nil;
+    }
+    
+    if (![self.contentView pointInside:point withEvent:event]) {
+        return nil;
+    }
+    
+    for (UIView *view in [self.contentView.subviews reverseObjectEnumerator]) {
+        CGPoint convertedPoint = [self.contentView convertPoint:point toView:view];
+        UIView *subview = [view hitTest:convertedPoint withEvent:event];
+        
+        if (subview) {
+            return subview;
+        }
+    }
+    
+    return self.contentView;
+}
+
 - (id)init
 {
-    CGRect frame = [UIApplication sharedApplication].statusBarFrame;
+    CGRect frame = [UIApplication sharedApplication].delegate.window.bounds;
     self = [super initWithFrame:frame];
     if (!self) {
         return nil;
     }
     
     self.windowLevel = UIWindowLevelStatusBar - 1;
-    self.hidden = NO;
     self.userInteractionEnabled = YES;
     self.backgroundColor = [UIColor clearColor];
-    self.alpha = 0.0;
+    self.alpha = 1.0;
     
-    self.contentView = [[UIView alloc] initWithFrame:self.frame];
+    self.contentView = [[UIView alloc] initWithFrame:[UIApplication sharedApplication].statusBarFrame];
     self.contentView.backgroundColor = [UIColor colorWithRed:0.418 green:0.607 blue:1.000 alpha:1.000];
     self.contentView.clipsToBounds = YES;
+    self.contentView.alpha = 0.0;
     self.contentView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     
     [self addSubview:self.contentView];
     
     self.expandHeight = WPDefaultExpandedHeight;
     self.animationDuration = WPDefaultAnimationDuration;
+    
+    [self makeKeyAndVisible];
     
     return self;
 }
@@ -92,17 +121,17 @@ static const CGFloat WPDefaultAnimationDuration = 0.5;
 - (void)showOverlayAnimated:(BOOL)animated completion:(void (^)(void))completion
 {
     CGRect statusBarFrame = [UIApplication sharedApplication].statusBarFrame;
-    if (CGFloatEqualToCGFloat(CGRectGetHeight(self.frame), CGRectGetHeight(statusBarFrame) + self.expandHeight)) {
+    if (CGFloatEqualToCGFloat(CGRectGetHeight(self.contentView.frame), CGRectGetHeight(statusBarFrame) + self.expandHeight)) {
         return;
     }
     
     statusBarFrame.size.height += self.expandHeight;
     
-    UIWindow *mainWindow = [UIApplication sharedApplication].delegate.window;
+    UIView *mainView = [UIApplication sharedApplication].delegate.window.rootViewController.view;
+    CGRect mainViewFrame = mainView.frame;
     
-    CGRect mainWindowFrame = mainWindow.frame;
-    mainWindowFrame.origin.y += self.expandHeight;
-    mainWindowFrame.size.height -= self.expandHeight;
+    mainViewFrame.origin.y += self.expandHeight;
+    mainViewFrame.size.height -= self.expandHeight;
     
     NSDictionary *userInfo = @{ WPStatusBarTotalDurationUserInfoKey : animated ? @(self.animationDuration) : @(0.0),
                                 WPStatusBarBeginRectUserInfoKey : [NSValue valueWithCGRect:[UIApplication sharedApplication].statusBarFrame],
@@ -118,11 +147,11 @@ static const CGFloat WPDefaultAnimationDuration = 0.5;
     
     if (animated) {
         [UIView animateWithDuration:self.animationDuration delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
-            self.frame = statusBarFrame;
-            self.alpha = 1.0;
+            self.contentView.frame = statusBarFrame;
+            self.contentView.alpha = 1.0;
             
-            mainWindow.frame = mainWindowFrame;
-            [mainWindow layoutIfNeeded];
+            mainView.frame = mainViewFrame;
+            [mainView layoutIfNeeded];
         } completion:^(BOOL finished) {
             [[NSNotificationCenter defaultCenter] postNotificationName:WPStatysBarDidShowNotification object:nil userInfo:userInfo];
             
@@ -131,11 +160,11 @@ static const CGFloat WPDefaultAnimationDuration = 0.5;
             }
         }];
     } else {
-        self.frame = statusBarFrame;
-        self.alpha = 1.0;
+        self.contentView.frame = statusBarFrame;
+        self.contentView.alpha = 1.0;
         
-        mainWindow.frame = mainWindowFrame;
-        [mainWindow layoutIfNeeded];
+        mainView.frame = mainViewFrame;
+        [mainView layoutIfNeeded];
         
         [[NSNotificationCenter defaultCenter] postNotificationName:WPStatysBarDidShowNotification object:nil userInfo:userInfo];
         
@@ -148,19 +177,19 @@ static const CGFloat WPDefaultAnimationDuration = 0.5;
 - (void)hideOverlayAnimated:(BOOL)animated completion:(void (^)(void))completion
 {
     CGRect statusBarFrame = [UIApplication sharedApplication].statusBarFrame;
-    if (CGRectGetHeight(self.frame) <= CGRectGetHeight(statusBarFrame)) {
+    if (CGRectGetHeight(self.contentView.frame) <= CGRectGetHeight(statusBarFrame)) {
         return;
     }
     
-    UIWindow *mainWindow = [UIApplication sharedApplication].delegate.window;
+    UIView *mainView = [UIApplication sharedApplication].delegate.window.rootViewController.view;
     CGFloat delta = CGRectGetHeight(self.contentView.frame) - CGRectGetHeight(statusBarFrame);
     
-    CGRect mainWindowFrame = mainWindow.frame;
-    mainWindowFrame.origin.y -= delta;
-    mainWindowFrame.size.height += delta;
+    CGRect mainViewFrame = mainView.frame;
+    mainViewFrame.origin.y -= delta;
+    mainViewFrame.size.height += delta;
     
     NSDictionary *userInfo = @{ WPStatusBarTotalDurationUserInfoKey : animated ? @(self.animationDuration) : @(0.0),
-                                WPStatusBarBeginRectUserInfoKey : [NSValue valueWithCGRect:self.frame],
+                                WPStatusBarBeginRectUserInfoKey : [NSValue valueWithCGRect:self.contentView.frame],
                                 WPStatusBarEndRectUserInfoKey : [NSValue valueWithCGRect:statusBarFrame],
                                 WPStatusBarDelayUserInfoKey : @(0.0),
                                 WPStatusBarAnimatedUserInfoKey : @(animated) };
@@ -170,13 +199,12 @@ static const CGFloat WPDefaultAnimationDuration = 0.5;
     
     if (animated) {
         [UIView animateWithDuration:self.animationDuration delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
-            self.frame = statusBarFrame;
-            self.alpha = 0.0;
+            self.contentView.frame = statusBarFrame;
+            self.contentView.alpha = 0.0;
             
-            mainWindow.frame = mainWindowFrame;
-            mainWindow.rootViewController.view.frame = mainWindowFrame;
+            mainView.frame = mainViewFrame;
             
-            [mainWindow layoutIfNeeded];
+            [mainView layoutIfNeeded];
         } completion:^(BOOL finished) {
             if (!IsIOS8OrMore()) {
                 [[UIApplication sharedApplication].delegate.window.rootViewController.view removeObserver:self forKeyPath:NSStringFromSelector(@selector(frame))];
@@ -189,12 +217,11 @@ static const CGFloat WPDefaultAnimationDuration = 0.5;
             }
         }];
     } else {
-        self.alpha = 0.0;
-        self.frame = statusBarFrame;
+        self.contentView.alpha = 0.0;
+        self.contentView.frame = statusBarFrame;
         
-        mainWindow.frame = mainWindowFrame;
-        mainWindow.rootViewController.view.frame = mainWindowFrame;
-        [mainWindow layoutIfNeeded];
+        mainView.frame = mainViewFrame;
+        [mainView layoutIfNeeded];
         
         if (!IsIOS8OrMore()) {
             [[UIApplication sharedApplication].delegate.window.rootViewController.view removeObserver:self forKeyPath:NSStringFromSelector(@selector(frame))];
@@ -232,17 +259,9 @@ static const CGFloat WPDefaultAnimationDuration = 0.5;
     [self didChangeValueForKey:NSStringFromSelector(@selector(animationDuration))];
 }
 
-- (BOOL)expandable
+- (BOOL)expanded
 {
-    return CGRectGetHeight(self.frame) > CGRectGetHeight([UIApplication sharedApplication].statusBarFrame);
-}
-
-#pragma mark - Private
-
-- (CGFloat)maximumTitleLabelHeight
-{
-    CGFloat height = CGRectGetHeight(self.contentView.frame) - CGRectGetHeight([UIApplication sharedApplication].statusBarFrame);
-    return height;
+    return CGRectGetHeight(self.contentView.frame) > CGRectGetHeight([UIApplication sharedApplication].statusBarFrame);
 }
 
 #pragma mark - Utilities

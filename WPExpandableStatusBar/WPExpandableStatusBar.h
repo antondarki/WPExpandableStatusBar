@@ -46,7 +46,7 @@ extern NSString * const WPStatusBarAnimatedUserInfoKey;
 // 50% of this value set alpha animation, 50% - expand animation
 @property (nonatomic, assign) CGFloat animationDuration;
 
-@property (nonatomic, assign, readonly) BOOL expandable;
+@property (nonatomic, assign, readonly) BOOL expanded;
 
 + (instancetype)sharedInstance;
 
